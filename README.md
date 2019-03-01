@@ -1,14 +1,17 @@
 # react-native-signature-capture
 
 ## About this
+
 React Native library for capturing signature
 
 User would sign on the app and when you press the save button it returns the base64 encoded png
 
 ### iOS
+
 <img src="http://i.giphy.com/3oEduIyWb48Ws3bSuc.gif" />
 
 ### Android
+
 <img src="http://i.giphy.com/xT0GUKJFFkdDv25FNC.gif" />
 
 ## Install
@@ -83,6 +86,7 @@ public class MainApplication extends Application implements ReactApplication {
 ## Usage
 
 Then you can use SignatureCapture component in your react-native's App, like this:
+
 ```javascript
 ...
 import React, {Component} from 'react';
@@ -103,29 +107,31 @@ class CustomComponent extends Component {
 
 ### Properties
 
-+ **saveImageFileInExtStorage** : Make this props true, if you want to save the image file in external storage. Default is false. Warning: Image file will be visible in gallery or any other image browsing app
+- **saveImageFileInExtStorage** : Make this props true, if you want to save the image file in external storage. Default is false. Warning: Image file will be visible in gallery or any other image browsing app
 
-+ **showBorder** : If this props is made to false, it will hide the dashed border (the border is shown on iOS only).
+- **showBorder** : If this props is made to false, it will hide the dashed border (the border is shown on iOS only).
 
-+ **showNativeButtons** : If this props is made to true, it will display the native buttons "Save" and "Reset".
+- **showNativeButtons** : If this props is made to true, it will display the native buttons "Save" and "Reset".
 
-+ **showTitleLabel** : If this props is made to true, it will display the "x_ _ _ _ _ _ _ _ _ _ _" placeholder indicating where to sign.
+- **showTitleLabel** : If this props is made to true, it will display the "x\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_" placeholder indicating where to sign.
 
-+ **viewMode** : "portrait" or "landscape" change the screen orientation based on boolean value
+- **viewMode** : "portrait" or "landscape" change the screen orientation based on boolean value
 
-+ **maxSize**  : sets the max size of the image maintains aspect ratio, default is 500
+- **maxSize** : sets the max size of the image maintains aspect ratio, default is 500
+
+- **mirrorImage**: boolean indicating if image should be mirrored. Default: false
 
 ### Methods
 
-+ **saveImage()** : when called it will save the image and returns the base 64 encoded string on onSaveEvent() callback
+- **saveImage()** : when called it will save the image and returns the base 64 encoded string on onSaveEvent() callback
 
-+ **resetImage()** : when called it will clear the image on the canvas
+- **resetImage()** : when called it will clear the image on the canvas
 
 ### Callback Props
-+ **onSaveEvent** : Triggered when saveImage() is called, which return Base64 Encoded String and image file path.
 
-+ **onDragEvent** : Triggered when user marks his signature on the canvas. This will not be called when the user does not perform any action on canvas.
+- **onSaveEvent** : Triggered when saveImage() is called, which return Base64 Encoded String and image file path.
 
+- **onDragEvent** : Triggered when user marks his signature on the canvas. This will not be called when the user does not perform any action on canvas.
 
 ### Example
 
@@ -135,88 +141,95 @@ class CustomComponent extends Component {
  * https://github.com/facebook/react-native
  */
 
-var React = require('react');
-var ReactNative = require('react-native');
+var React = require("react");
+var ReactNative = require("react-native");
 
-var {Component} = React;
+var { Component } = React;
 
-var {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View, TouchableHighlight
-} = ReactNative;
+var { AppRegistry, StyleSheet, Text, View, TouchableHighlight } = ReactNative;
 
-import SignatureCapture from 'react-native-signature-capture';
+import SignatureCapture from "react-native-signature-capture";
 
 class RNSignatureExample extends Component {
-    render() {
-        return (
-            <View style={{ flex: 1, flexDirection: "column" }}>
-                <Text style={{alignItems:"center",justifyContent:"center"}}>Signature Capture Extended </Text>
-                <SignatureCapture
-                    style={[{flex:1},styles.signature]}
-                    ref="sign"
-                    onSaveEvent={this._onSaveEvent}
-                    onDragEvent={this._onDragEvent}
-                    saveImageFileInExtStorage={false}
-                    showNativeButtons={false}
-                    showTitleLabel={false}
-                    viewMode={"portrait"}/>
+  render() {
+    return (
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <Text style={{ alignItems: "center", justifyContent: "center" }}>
+          Signature Capture Extended{" "}
+        </Text>
+        <SignatureCapture
+          style={[{ flex: 1 }, styles.signature]}
+          ref="sign"
+          onSaveEvent={this._onSaveEvent}
+          onDragEvent={this._onDragEvent}
+          saveImageFileInExtStorage={false}
+          showNativeButtons={false}
+          showTitleLabel={false}
+          viewMode={"portrait"}
+        />
 
-                <View style={{ flex: 1, flexDirection: "row" }}>
-                    <TouchableHighlight style={styles.buttonStyle}
-                        onPress={() => { this.saveSign() } } >
-                        <Text>Save</Text>
-                    </TouchableHighlight>
+        <View style={{ flex: 1, flexDirection: "row" }}>
+          <TouchableHighlight
+            style={styles.buttonStyle}
+            onPress={() => {
+              this.saveSign();
+            }}
+          >
+            <Text>Save</Text>
+          </TouchableHighlight>
 
-                    <TouchableHighlight style={styles.buttonStyle}
-                        onPress={() => { this.resetSign() } } >
-                        <Text>Reset</Text>
-                    </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.buttonStyle}
+            onPress={() => {
+              this.resetSign();
+            }}
+          >
+            <Text>Reset</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+    );
+  }
 
-                </View>
+  saveSign() {
+    this.refs["sign"].saveImage();
+  }
 
-            </View>
-        );
-    }
+  resetSign() {
+    this.refs["sign"].resetImage();
+  }
 
-    saveSign() {
-        this.refs["sign"].saveImage();
-    }
-
-    resetSign() {
-        this.refs["sign"].resetImage();
-    }
-
-    _onSaveEvent(result) {
-        //result.encoded - for the base64 encoded png
-        //result.pathName - for the file path name
-        console.log(result);
-    }
-    _onDragEvent() {
-         // This callback will be called when the user enters signature
-        console.log("dragged");
-    }
+  _onSaveEvent(result) {
+    //result.encoded - for the base64 encoded png
+    //result.pathName - for the file path name
+    console.log(result);
+  }
+  _onDragEvent() {
+    // This callback will be called when the user enters signature
+    console.log("dragged");
+  }
 }
 
 const styles = StyleSheet.create({
-    signature: {
-        flex: 1,
-        borderColor: '#000033',
-        borderWidth: 1,
-    },
-    buttonStyle: {
-        flex: 1, justifyContent: "center", alignItems: "center", height: 50,
-        backgroundColor: "#eeeeee",
-        margin: 10
-    }
+  signature: {
+    flex: 1,
+    borderColor: "#000033",
+    borderWidth: 1
+  },
+  buttonStyle: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    backgroundColor: "#eeeeee",
+    margin: 10
+  }
 });
 
-AppRegistry.registerComponent('RNSignatureExample', () => RNSignatureExample);
+AppRegistry.registerComponent("RNSignatureExample", () => RNSignatureExample);
 ```
 
--------------
+---
 
 Please checkout the example folder (iOS/Android):
 https://github.com/RepairShopr/react-native-signature-capture/tree/master/Example

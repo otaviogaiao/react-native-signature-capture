@@ -29,6 +29,8 @@ import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import java.lang.Boolean;
 
+import android.graphics.Matrix;
+
 public class RSSignatureCaptureMainView extends LinearLayout implements OnClickListener,RSSignatureCaptureView.SignatureCallback {
   LinearLayout buttonsLayout;
   RSSignatureCaptureView signatureView;
@@ -40,6 +42,7 @@ public class RSSignatureCaptureMainView extends LinearLayout implements OnClickL
   Boolean showBorder = true;
   Boolean showNativeButtons = true;
   Boolean showTitleLabel = true;
+  Boolean imageMirror = false;
   int maxSize = 500;
 
   public RSSignatureCaptureMainView(Context context, Activity activity) {
@@ -59,10 +62,6 @@ public class RSSignatureCaptureMainView extends LinearLayout implements OnClickL
         ViewGroup.LayoutParams.MATCH_PARENT));
   }
 
-  public RSSignatureCaptureView getSignatureView() {
-    return signatureView;
-  }
-
   public void setSaveFileInExtStorage(Boolean saveFileInExtStorage) {
     this.saveFileInExtStorage = saveFileInExtStorage;
   }
@@ -75,6 +74,10 @@ public class RSSignatureCaptureMainView extends LinearLayout implements OnClickL
     } else if (viewMode.equalsIgnoreCase("landscape")) {
       mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
+  }
+
+  public void setImageMirror(Boolean imageMirror) {
+    this.imageMirror = imageMirror;
   }
 
   public void setShowNativeButtons(Boolean showNativeButtons) {
@@ -202,7 +205,13 @@ public class RSSignatureCaptureMainView extends LinearLayout implements OnClickL
       width = (int) (height * bitmapRatio);
     }
 
-    return Bitmap.createScaledBitmap(image, width, height, true);
+    if(this.imageMirror) {
+       Matrix m = new Matrix();
+        m.preScale(1, -1);
+        Bitmap src = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), m, false);
+        return Bitmap.createScaledBitmap(src, width, height, true);
+    }
+     return Bitmap.createScaledBitmap(image, width, height, true);
   }
 
 
